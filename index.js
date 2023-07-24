@@ -32,6 +32,7 @@ async function run() {
     // Send a ping to confirm a successful connection
 
     const collegeCollection = client.db('collegesdb').collection('colleges')
+    const admissionCollection = client.db('collegesdb').collection('details')
 
 
     app.get('/college',async(req,res) =>{
@@ -47,12 +48,16 @@ async function run() {
 
     })
 
-    // app.post('/cart', async(req,res) =>{
-    //     const item = req.body
-    //     console.log(item)
-    //     const result = cartCollection.insertOne(item)
-    //     res.send(result)
-    // })
+    app.get('/addmissonform', async(req,res) =>{
+      const result = await admissionCollection.find().toArray();
+      res.send(result);
+    })
+    app.post('/addmissonform', async(req,res) =>{
+        const item = req.body
+        console.log(item)
+        const result = admissionCollection.insertOne(item)
+        res.send(result)
+    })
 
 
     await client.db("admin").command({ ping: 1 });
