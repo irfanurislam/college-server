@@ -52,12 +52,22 @@ async function run() {
       const result = await admissionCollection.find().toArray();
       res.send(result);
     })
+
+    app.get('/addmissonform/:email', async (req, res) => {
+      const email = req.params.email;
+      const query = { email: email };
+      const result = await admissionCollection.findOne(query); 
+      res.send(result);
+    });
+    
+
     app.post('/addmissonform', async(req,res) =>{
         const item = req.body
         console.log(item)
         const result = admissionCollection.insertOne(item)
         res.send(result)
     })
+
 
 
     await client.db("admin").command({ ping: 1 });
