@@ -40,6 +40,33 @@ async function run() {
         res.send(result);
     })
 
+    app.get('/topcollege', async(req,res) =>{
+      const searchTerm = req.query.searchTerm
+      let query = {}; // Create an empty query object
+
+      // If the search term is provided, update the query to search for college names that match the search term
+      if (searchTerm && searchTerm.trim() !== '') {
+        query = { name: { $regex: new RegExp(searchTerm, 'i') } };
+      }
+    
+      try {
+        const result = await collegeCollection.find(query).toArray();
+    
+        // Check if there are no matches for the provided search term
+        if (result.length === 0) {
+          return res.status(404).json({ message: 'No colleges available for the given search term.' });
+        }
+    
+        res.send(result);
+      } catch (error) {
+        console.error('Error fetching colleges:', error);
+        res.status(500).send('Error fetching colleges');
+      }
+    });
+
+
+
+
     app.get('/college/:id', async(req,res) =>{
       const id = req.params.id;
       const query = { _id: new ObjectId(id) };
